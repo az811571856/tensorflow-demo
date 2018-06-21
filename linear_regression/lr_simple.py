@@ -1,17 +1,18 @@
 # -*- coding: utf-8 -*
+# 没有图形的线性回归
 import tensorflow as tf
-import np as np
+import numpy as np
 
 # 使用 NumPy 生成假数据(phony data), 总共 100 个点.
-random_r = np.random.rand(2, 100)
+random_r = np.random.rand(2, 20)
 print random_r
 print "\n"
 x_data = np.float32(random_r) # 随机输入
-print x_data
+print("# x_data {}".format(x_data))
 
 y_data = np.dot([0.100, 0.200], x_data) + 0.300
 print "\n"
-print y_data
+print("# x_data {}".format(y_data))
 print "\n"
 # 构造一个线性模型
 # 
@@ -33,7 +34,6 @@ init = tf.initialize_all_variables()
 
 # 启动图 (graph)
 sess = tf.Session()
-tf.assign()
 sess.run(init)
 
 # 拟合平面
