@@ -55,20 +55,13 @@ loss = -tf.reduce_mean(y_data*tf.log(y_pred) + (1-y_data)*tf.log(1-y_pred))  # �
 # b_update = b.assign_sub(b_grad * lr)
 
 # tensorflow的优化器
-optimizer = tf.train.GradientDescentOptimizer(learning_rate=1, name='myOptimizer')
+optimizer = tf.train.GradientDescentOptimizer(learning_rate=1.0, name='myOptimizer')
 train_op = optimizer.minimize(loss)
 
 for i in range(10200):
     # w_numpy, b_numpy = sess.run([w_update, b_update]) # 自定义的优化器
 
-    print("i: {}, loss : {}".format(i, sess.run(loss)))
-    # if i % 20 == 0:
-    #     w0 = w_numpy[0]
-    #     w1 = w_numpy[1]
-    #     b0 = b_numpy[0]
-    #     plot_x = np.arange(0.2, 1, 0.01)
-    #     plot_y = (-w0 * plot_x - b0) / w1
-    #     plt.plot(plot_x, plot_y, 'g', label='cutting line')
-    #     plt.legend()
-        # plt.show()
-
+    if(i+1)%200 == 0:
+        y_pred_label = np.greater_equal(sess.run(y_pred), 0.5).astype(np.float32)
+        accuracy = np.mean(y_pred_label == sess.run(y_data))
+        print("i: {}, loss : {}, accuracy: {}".format(i, sess.run(loss), accuracy))
