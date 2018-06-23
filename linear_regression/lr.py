@@ -4,6 +4,7 @@ import tensorflow as tf
 import matplotlib.pyplot as plt
 import numpy as np
 
+
 # 展示训练数据与，预测数据
 def show(e, x_train, y_train, y_pred_numpy, loss_numpy):
     fig = plt.figure()
@@ -18,6 +19,7 @@ def show(e, x_train, y_train, y_pred_numpy, loss_numpy):
     fig.canvas.draw()
     plt.pause(0.5)
     print('epoch: {}, loss: {}'.format(e, loss_numpy))
+
 
 # 生成原始数据
 x_data = np.random.rand(20)
