@@ -57,7 +57,6 @@ loss = -tf.reduce_mean(y_data*tf.log(y_pred) + (1-y_data)*tf.log(1-y_pred))  # �
 # tensorflow的优化器
 optimizer = tf.train.GradientDescentOptimizer(learning_rate=1.0, name='myOptimizer')
 train_op = optimizer.minimize(loss)
-
 for i in range(10200):
     # w_numpy, b_numpy = sess.run([w_update, b_update]) # 自定义的优化器
 
