@@ -21,6 +21,8 @@ def plot_decision_boundary(model, x, y):
     plt.ylabel('x2')
     plt.xlabel('x1')
     plt.scatter(x[:, 0], x[:, 1], c=np.squeeze(y), cmap=plt.cm.Spectral)
+    # 不显示
+    plt.show()
 
 
 np.random.seed(100)
@@ -32,7 +34,7 @@ D = 2 # 维度
 x = np.zeros((m, D))
 # [400,1]
 y = np.zeros((m, 1), dtype='uint8') # label 向量，0 表示红色，1 表示蓝色
-a = 10
+a = 4
 
 #   j: 0,1
 for j in range(2):
@@ -41,15 +43,15 @@ for j in range(2):
     # shape 200
     t = np.linspace(j*3.12,(j+1)*3.12,N) + np.random.randn(N)*0.2 # theta
     # shape 200
-    print(np.random.randn(N))
-    r = a*np.sin(2*t) + np.random.randn(N)*0.2 # radius
+    r = a*np.sin(4*t) + np.random.randn(N)*0.2 # radius
     # =号右侧：shpae 200,2
     x[ix] = np.c_[r*np.sin(t), r*np.cos(t)]
     # shape
     y[ix] = j
 
 plt.scatter(x[:, 0], x[:, 1], c=np.squeeze(y), s=40, cmap=plt.cm.Spectral)
-plt.show()
+# 不显示
+# plt.show()
 x = tf.constant(x, dtype=tf.float32, name='x')
 y = tf.constant(y, dtype=tf.float32, name='y')
 
@@ -160,4 +162,3 @@ def plot_network(input_data):
 
 plot_decision_boundary(plot_network, x.eval(session=sess), y.eval(session=sess))
 plt.title('2 layer network')
-plt.show()
