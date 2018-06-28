@@ -19,7 +19,7 @@ from __future__ import division
 from __future__ import print_function
 import gzip
 import os
-import np
+import numpy as np
 from six.moves import urllib
 from six.moves import xrange  # pylint: disable=redefined-builtin
 SOURCE_URL = 'http://yann.lecun.com/exdb/mnist/'
