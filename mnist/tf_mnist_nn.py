@@ -35,11 +35,11 @@ for ind, (image, label) in enumerate(zip(images, labels)):
 
 def hidden_layer(layer_input, output_depth, scope='hidden_layer', reuse=None):
     """
-    构造单个隐藏层
+    构造单层隐藏层（不包含激活函数）
 
-    :param layer_input: 输入层
+    :param layer_input: 输入层数据
     :param output_depth:  隐藏层个数
-    :param scope:
+    :param scope: 变量名称
     :param reuse:
     :return:
     """
@@ -53,3 +53,63 @@ def hidden_layer(layer_input, output_depth, scope='hidden_layer', reuse=None):
                             name='bias')
         net = tf.matmul(layer_input, w) + b
         return net
+
+
+def DNN(x, output_depths, scope='DNN', reuse=None):
+    """
+    神经网络
+    :param x:  原始数据
+    :param output_depths:  隐藏层输出层个数向量
+    :param scope:
+    :param reuse:
+    :return:
+    """
+    # 添加隐藏层
+    net = x
+    for e, output_depth in enumerate(output_depths):
+        net = hidden_layer(net, output_depth, scope='hiddenLayer%d' % e, reuse=reuse)
+        net = tf.nn.relu(net)
+    # 添加输出层
+    net = hidden_layer(net, 10, 'outLayer', reuse)
+
+    return net
+
+
+# 输入输出的占位符
+input_ph = tf.placeholder(shape=(None, 784), dtype=tf.float32)
+label_ph = tf.placeholder(shape=(None, 10), dtype=tf.int8)
+
+# 输入数据带入神经网络。隐藏层为3层，个数分别为 400 200 100
+dnn = DNN(input_ph, [400, 200, 100])
+
+# 定义损失函数
+loss = tf.losses.softmax_cross_entropy(label_ph, dnn)
+
+# 梯度下降
+optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.1)
+train_op = optimizer.minimize(loss)
+
+# 准确度
+acc = tf.reduce_mean(tf.cast(tf.equal(tf.argmax(dnn, axis=-1),
+                                      tf.argmax(label_ph, axis=-1)),
+                             dtype=tf.float32))
+
+sess = tf.InteractiveSession()
+sess.run(tf.initialize_all_variables())
+# 循环训练
+for i in range(20000):
+    # 训练变量
+    images, labels = train_set.next_batch(64)
+    sess.run(train_op, feed_dict={input_ph: images, label_ph: labels})
+    # 打印中间结果
+    if i % 1000 == 0:
+        # 验证在测试集上的效果
+        # train_loss, train_acc = sess.run((loss, acc), feed_dict={input_ph: images, label_ph: labels})
+        images_test, labels_test = test_set.next_batch(64)
+        test_loss, test_acc = sess.run((loss, acc), feed_dict={input_ph: images_test, label_ph: labels_test})
+        print("第 {} 次，损失值：{:.6f}，准确度 {:.3f}".format(i+1, test_loss, test_acc))
+
+
+images_test, labels_test = test_set.next_batch(10000)
+test_loss, test_acc = sess.run((loss, acc), feed_dict={input_ph: images_test, label_ph: labels_test})
+print("损失值：{:.6f}，准确度 {:.3f}".format(test_loss, test_acc))
